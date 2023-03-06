@@ -1,0 +1,145 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.bg_vdo {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%; 
+    min-height: 100%;
+    z-index: -1;
+    opacity: 0.8;
+}
+
+.main_body {
+    height: 93vh;
+    width: 96vw;
+    /* border: 2px solid blue; */
+    padding: 2rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    border: 2px solid rgb(0, 162, 255);
+    border-radius: 2rem;
+    box-shadow: inset 0 0 30px rgb(0, 234, 255);
+    height: 80%;
+    width: 60%;
+    padding: 1rem;
+    background-color: rgba(0, 234, 255, 0.041);
+}
+.container > h2{
+    font-size: 4rem;
+    text-shadow: 0 0 5px rgb(3, 184, 215);
+    color: rgb(0, 0, 0);
+    margin: 1rem;
+}
+.input{
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    text-shadow: 0 0 5px rgb(3, 184, 215);
+}
+.input input{
+    width: 40%;
+    height: 2.5rem;
+    border-radius: 5rem;
+    text-align: center;
+    color: rgb(0, 0, 0);
+    font-size: 1.5rem;
+    background-color: rgba(0, 255, 255, 0.051);
+    box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.833);
+}
+.btn{
+    box-shadow: 0 0 5px rgb(0, 0, 0);
+    margin: 0 2rem;
+    border: 3px solid rgb(0, 0, 0);
+    height: 2.5rem;
+    width: 2.5rem;
+    border-radius: 50%;
+    background:transparent;
+}
+.btn:hover{
+    background-color: #0456d1ac;
+}
+.location{
+    font-size: 3rem;
+    margin: 1rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+.location h1{
+    text-shadow: inset 0 0 10px rgba(0, 255, 255, 0.833);
+    
+}
+.location i{
+    margin: 0 1rem;
+}
+.temperature{
+    font-size: 3.5rem;
+    text-shadow: 0 0 5px rgb(3, 184, 215);
+}
+.about-info{
+    /* border: 2px solid red; */
+    display: flex;
+    flex-direction:row;
+    justify-content: space-between;
+    align-items: center;
+    height: 20rem;
+    padding: 0.5rem;
+}
+.wether-info{
+    height: 14rem;
+    width: 9rem;
+    /* border: 2px solid blue; */
+    border-radius: 0 2rem 0 2rem;
+    box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.833);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+.wether-info:hover{
+    background-color: #0accf820;
+}
+.wether-info img{
+    height: 3rem;
+    width: 3rem;
+    box-shadow: 0 0 15px rgb(3, 184, 215);
+    border-radius: 50%;
+    background-color: #05f3ff30;
+}
+.wether-info h3{
+    text-shadow: 0 0 5px rgb(3, 184, 215);
+}
+.wind{
+    margin: 1rem;
+    padding: 0.5rem;
+    border-radius: 4rem;
+    box-shadow: 0 0 15px rgb(3, 184, 215);
+    background-color: #06ffee95;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+.wind h1{
+    text-shadow: 0 0 15px rgb(3, 184, 215);
+}
+
+
+
+
+
+/* http://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=a593e2c9d6050a4322c0f4b50c0f5f02 */
+
+
+/* https://api.openweathermap.org/data/2.5/weather?lat=51.5073219&lon=-0.1276474&appid=a593e2c9d6050a4322c0f4b50c0f5f02 */
