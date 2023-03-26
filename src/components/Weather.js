@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import "./Weather.css"
-import vdo from "../doc/Apocalypse - 115081.mp4"
 import morning from "../doc/morning.mp4";
+import dawn from "../doc/dawn.mp4";
 import afternoon from "../doc/afternoon.mp4";
 import night from "../doc/night.mp4";
 import low_temp from "../doc/low_temp.png"
@@ -23,7 +23,8 @@ export default function Weather() {
     setTimeout(() => {
         let date = new Date();
         let houre = date.getHours();
-        if (houre < 12) setBgVdo(morning);
+        if (houre >= 0 && houre < 6)setBgVdo(dawn);
+        if (houre < 12 && houre>=6) setBgVdo(morning);
         if (houre >= 12 && houre < 18) setBgVdo(afternoon);
         if (houre >= 18) setBgVdo(night);
 
