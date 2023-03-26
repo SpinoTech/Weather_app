@@ -191,6 +191,46 @@
     }
 }
 
+@media screen and (max-width: 350px) {
+  .container{
+    width: 100vw;
+    height: 100vh;
+    background-image: linear-gradient(to top left, #00ddff2b, #00ff6e44);
+  }
+  .container>h2 {
+    font-size: 1.7rem;
+  }
+    .wind{
+   margin: 1rem;
+  }
+  .wind h1{
+    font-size: 1rem;
+  }
+  .location{
+    font-size: 1rem;
+  }
+  .btn{
+    margin: 0 0.2rem;
+  }
+  .input>h2{
+    display: none;
+  }
+  .input input{
+    width: 70%;
+  }
+  .about-info{
+    height: auto;
+  }
+  .wether-info {
+    height: 11rem;
+    width: 6rem;
+    background-image: linear-gradient(to top left, #00ddff4e, #00ff6e55);
+  }
+  .wether-info> h3{
+     font-size: 0.7rem;
+  }
+}
+
 
 
 
