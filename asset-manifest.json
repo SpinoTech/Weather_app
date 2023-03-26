@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/Weather_app/static/css/main.65de9efa.css",
-    "main.js": "/Weather_app/static/js/main.c891c254.js",
+    "main.js": "/Weather_app/static/js/main.2c72c105.js",
     "static/js/787.d9312eb8.chunk.js": "/Weather_app/static/js/787.d9312eb8.chunk.js",
     "static/media/night.mp4": "/Weather_app/static/media/night.cb7ccdcc6117bba807f5.mp4",
     "static/media/afternoon.mp4": "/Weather_app/static/media/afternoon.0f0bab5f2a979063abe8.mp4",
-    "static/media/Apocalypse - 115081.mp4": "/Weather_app/static/media/Apocalypse - 115081.f8495a5edd2f12ac5916.mp4",
     "static/media/morning.mp4": "/Weather_app/static/media/morning.9a11c305c538c9271cf7.mp4",
+    "static/media/dawn.mp4": "/Weather_app/static/media/dawn.a40be2dab688442f2ce4.mp4",
     "static/media/water_level.png": "/Weather_app/static/media/water_level.71f57d38bc926a5b3be8.png",
     "static/media/grnd_level.png": "/Weather_app/static/media/grnd_level.8fea93b8e8ffd52684fd.png",
     "static/media/high_temp.png": "/Weather_app/static/media/high_temp.26ed67cdfeb3b7de8613.png",
     "index.html": "/Weather_app/index.html",
     "main.65de9efa.css.map": "/Weather_app/static/css/main.65de9efa.css.map",
-    "main.c891c254.js.map": "/Weather_app/static/js/main.c891c254.js.map",
+    "main.2c72c105.js.map": "/Weather_app/static/js/main.2c72c105.js.map",
     "787.d9312eb8.chunk.js.map": "/Weather_app/static/js/787.d9312eb8.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.65de9efa.css",
-    "static/js/main.c891c254.js"
+    "static/js/main.2c72c105.js"
   ]
 }
