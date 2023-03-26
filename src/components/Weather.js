@@ -19,7 +19,7 @@ import {AiOutlineArrowLeft}from"react-icons/ai";
 export default function Weather() {
 
     // changing the background according to the time 
-    const [bgVdo, setBgVdo] = useState(vdo);
+    const [bgVdo, setBgVdo] = useState(null);
     setTimeout(() => {
         let date = new Date();
         let houre = date.getHours();
@@ -27,11 +27,11 @@ export default function Weather() {
         if (houre >= 12 && houre < 18) setBgVdo(afternoon);
         if (houre >= 18) setBgVdo(night);
 
-    }, 1000);
+    }, 10);
 
     // all react hooks are here
     const [city, setCity] = useState(null);
-    const [search, setSearch] = useState("");
+    const [search, setSearch] = useState(" ");
     // const [lat,setLat]=useState(null);
     
 
@@ -44,43 +44,55 @@ export default function Weather() {
     const setPosition=(position)=>{
         //    setLat(position.coords.latitude);
         //    setLong(position.coords.longitude);
-            const fetch_api = async () => {
-                const url_of_weather = `https://api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&appid=a593e2c9d6050a4322c0f4b50c0f5f02`;
+            const fetch_apis = async () => {
+                let url_of_weather = `https://api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&appid=a593e2c9d6050a4322c0f4b50c0f5f02`;
     
-                const weather_responce = await fetch(url_of_weather);
+                let weather_responce = await fetch(url_of_weather);
                 // console.log(weather_responce);
-                const json_weather = await weather_responce.json();
+                let json_weather = await weather_responce.json();
                 // console.log(json_weather);
-                setCity(json_weather);
+                setSearch(json_weather.name);
+                 url_of_weather = `https://api.openweathermap.org/data/2.5/weather?q=${search}&appid=a593e2c9d6050a4322c0f4b50c0f5f02&units=metric`;
+                 weather_responce = await fetch(url_of_weather);
+                // console.log(weather_responce);
+                 json_weather = await weather_responce.json();
+                // console.log(json_weather);
+                if(json_weather.cod==="404"){
+                    setCity(null);
+                }else{
+                    setCity(json_weather);
+                    // alert(json_weather.name);
+                    // document.getElementsByClassName("search").value=json_weather.name;
+                }
+                
             }
-            fetch_api();
+            fetch_apis();
     }
 
     useEffect(() => {
         const fetch_api = async () => {
-            // fetching the latitude and longitude of that location
-            const url_of_location = `http://api.openweathermap.org/geo/1.0/direct?q=${search}&appid=a593e2c9d6050a4322c0f4b50c0f5f02`;
-
-            const responce = await fetch(url_of_location);
-            // console.log(responce);
-            const json_responce = await responce.json();
-            // console.log(json_responce);
-
-
-            const url_of_weather = `https://api.openweathermap.org/data/2.5/weather?lat=${json_responce[0].lat}&lon=${json_responce[0].lon}&appid=a593e2c9d6050a4322c0f4b50c0f5f02`;
-
+            const url_of_weather = `https://api.openweathermap.org/data/2.5/weather?q=${search}&appid=a593e2c9d6050a4322c0f4b50c0f5f02&units=metric`;
             const weather_responce = await fetch(url_of_weather);
             // console.log(weather_responce);
             const json_weather = await weather_responce.json();
             // console.log(json_weather);
-            setCity(json_weather);
+            if(json_weather.cod==="404"){
+                setCity(null);
+            }else{
+                setCity(json_weather);
+            }
+            
         }
         fetch_api();
     }, [search])
     //    console.log(city)
 
     const check_city = (event) => {
-        setSearch((event.target.value).charAt(0).toUpperCase() + (event.target.value).slice(1));
+        if(event.target.value===""){
+            setSearch(" ")
+        }else{
+            setSearch((event.target.value).charAt(0).toUpperCase() + (event.target.value).slice(1));
+        }
         // console.log(typeof(event.target.value))
     }
 
@@ -88,19 +100,19 @@ export default function Weather() {
         <div className='main_body'>
             <video src={bgVdo} className='bg_vdo' autoPlay loop muted></video>
             <div className="container">
-                <h2>DEATH zONE WEATHER APP</h2>
+                <h2>SpinoTech WEATHER APP</h2>
 
                 <div className="input">
-                    <input type="search" className='search' placeholder='Enter The Location' onChange={check_city} />
+                    <input type="search" className='search' placeholder='Enter The Location' onChange={check_city}/>
                     <button className='btn' onClick={check_location}><BiCurrentLocation size={20}/> </button>
                     <AiOutlineArrowLeft size={20}/>
                     <h2>Locate You</h2>
                 </div>
-                {!city ? (<p style={{ fontSize: "2rem" }}>No Data Found</p>) : (
+                {!city? (<p style={{ fontSize: "2rem" }}>No Data Found</p>) : (
                     <div className="info">
-                        <div className="location"> <i><FaSearchLocation size={30} /></i><h1>{!search?(city.name):search}</h1></div>
+                        <div className="location"> <i><FaSearchLocation size={30} /></i><h1>{city.name}</h1></div>
 
-                        {!city ? (<h1>No Data Found</h1>) : (<h3 className='temperature'>{(city.main.temp - 273.15).toFixed(2)} ℃  /  {(((city.main.temp - 273.15) * 1.8) + 32).toFixed(2)} °F</h3>)}
+                        {!city ? (<h1>No Data Found</h1>) : (<h3 className='temperature'>{(city.main.temp ).toFixed(2)} ℃  /  {(((city.main.temp) * 1.8) + 32).toFixed(2)} °F</h3>)}
 
                         <div className='wind'><h1>Wind Speed : </h1>   <h1>{city.wind.speed} km/h</h1> <div style={{
                             transform: `rotate(${city
@@ -108,8 +120,8 @@ export default function Weather() {
                         }}><BsFillArrowUpCircleFill size={30} /></div></div>
 
                         <div className="about-info">
-                            <div className="wether-info">{!city? (<h3>No Data</h3>) : (<> <img src={low_temp} alt="" /> <h3>{(city.main.temp_min - 273.15).toFixed(2)} ℃</h3> <h3>Minimum Temperture</h3> </>)}</div>
-                            <div className="wether-info">{!city ? (<h3>No Data</h3>) : (<> <img src={high_temp} alt="" /> <h3>{(city.main.temp_max - 273.15).toFixed(2)} ℃</h3> <h3>Maximum Temperature</h3> </>)}</div>
+                            <div className="wether-info">{!city? (<h3>No Data</h3>) : (<> <img src={low_temp} alt="" /> <h3>{(city.main.temp_min).toFixed(2)} ℃</h3> <h3>Minimum Temperture</h3> </>)}</div>
+                            <div className="wether-info">{!city ? (<h3>No Data</h3>) : (<> <img src={high_temp} alt="" /> <h3>{(city.main.temp_max).toFixed(2)} ℃</h3> <h3>Maximum Temperature</h3> </>)}</div>
                             <div className="wether-info">{!city ? (<h3>No Data</h3>) : (<> <img src={pressur} alt="" /> <h3>{!(city.main.pressure) ? "No Data" : (city.main.pressure / 1013).toFixed(3)} ATM</h3> <h3>Pressur</h3> </>)}</div>
 
                             <div className="wether-info">{!city ? (<h3>No Data</h3>) : (<> <img src={humudity} alt="" /> <h3>{!(city.main.humidity) ? "No Data" : (city.main.humidity)} %</h3> <h3>humidity</h3> </>)}</div>
