@@ -10,10 +10,12 @@ import pressur from "../doc/pressur.png"
 import humudity from "../doc/humidity.png"
 import sea_level from "../doc/water_level.png"
 import ground_lvl from "../doc/grnd_level.png"
-import { FaSearchLocation } from "react-icons/fa";
+// import { FaSearchLocation } from "react-icons/fa";
 import { BsFillArrowUpCircleFill } from "react-icons/bs";
-import {BiCurrentLocation}from "react-icons/bi";
-import {AiOutlineArrowLeft}from"react-icons/ai";
+import { BiCurrentLocation } from "react-icons/bi";
+import { AiOutlineArrowLeft } from "react-icons/ai";
+import Card from './Card';
+
 
 
 export default function Weather() {
@@ -23,8 +25,8 @@ export default function Weather() {
     setTimeout(() => {
         let date = new Date();
         let houre = date.getHours();
-        if (houre >= 0 && houre < 6)setBgVdo(dawn);
-        if (houre < 12 && houre>=6) setBgVdo(morning);
+        if (houre >= 0 && houre < 6) setBgVdo(dawn);
+        if (houre < 12 && houre >= 6) setBgVdo(morning);
         if (houre >= 12 && houre < 18) setBgVdo(afternoon);
         if (houre >= 18) setBgVdo(night);
 
@@ -33,41 +35,58 @@ export default function Weather() {
     // all react hooks are here
     const [city, setCity] = useState(null);
     const [search, setSearch] = useState(" ");
-    // const [lat,setLat]=useState(null);
-    
+    const [dayforecast, setdayForecast] = useState({});
+
+    const convertDate = (e) => {
+        let date = new Date(e);
+        let day = `${date.toString()[0]}${date.toString()[1]}${date.toString()[2]}day`;
+        let time = date.toTimeString();
+        let hr;
+        if (parseInt(`${time[0]}${time[1]}`) > 12) hr = (parseInt(`${time[0]}${time[1]}`) - 12).toString();
+        else hr = (parseInt(`${time[0]}${time[1]}`)).toString();
+        return `${day} | ${hr} : ${time[3]}${time[4]} : ${time[6]}${time[7]} s`
+    }
+    setInterval(() => {
+        let time = convertDate(Date.now());
+        if (time && city) { document.querySelector("#timer").textContent = time; }
+    }, 1000);
 
     // location setting
-    const check_location=()=>{
+    const check_location = () => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(setPosition);
-          } 
+        }
     }
-    const setPosition=(position)=>{
+    const setPosition = (position) => {
         //    setLat(position.coords.latitude);
         //    setLong(position.coords.longitude);
-            const fetch_apis = async () => {
-                let url_of_weather = `https://api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&appid=a593e2c9d6050a4322c0f4b50c0f5f02`;
-    
-                let weather_responce = await fetch(url_of_weather);
-                // console.log(weather_responce);
-                let json_weather = await weather_responce.json();
-                // console.log(json_weather);
-                setSearch(json_weather.name);
-                 url_of_weather = `https://api.openweathermap.org/data/2.5/weather?q=${search}&appid=a593e2c9d6050a4322c0f4b50c0f5f02&units=metric`;
-                 weather_responce = await fetch(url_of_weather);
-                // console.log(weather_responce);
-                 json_weather = await weather_responce.json();
-                // console.log(json_weather);
-                if(json_weather.cod==="404"){
-                    setCity(null);
-                }else{
-                    setCity(json_weather);
-                    // alert(json_weather.name);
-                    // document.getElementsByClassName("search").value=json_weather.name;
-                }
-                
+        const fetch_apis = async () => {
+            let url_of_weather = `https://api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&appid=a593e2c9d6050a4322c0f4b50c0f5f02`;
+
+            let weather_responce = await fetch(url_of_weather);
+            // console.log(weather_responce);
+            let json_weather = await weather_responce.json();
+            // console.log(json_weather);
+            setSearch(json_weather.name);
+            url_of_weather = `https://api.openweathermap.org/data/2.5/weather?q=${search}&appid=a593e2c9d6050a4322c0f4b50c0f5f02&units=metric`;
+            weather_responce = await fetch(url_of_weather);
+            // console.log(weather_responce);
+            json_weather = await weather_responce.json();
+            // console.log(json_weather);
+            if (json_weather.cod === "404") {
+                setCity(null);
+            } else {
+                setCity(json_weather);
             }
-            fetch_apis();
+
+            // for the time wise forcast in days
+            fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${search}&appid=a593e2c9d6050a4322c0f4b50c0f5f02&units=metric`).then(jsonData => jsonData.json()).then(data => setdayForecast(data));
+            
+            // settign the search value to the pointed location value
+            document.querySelector(".search").value = search;
+
+        }
+        fetch_apis();
     }
 
     useEffect(() => {
@@ -77,21 +96,23 @@ export default function Weather() {
             // console.log(weather_responce);
             const json_weather = await weather_responce.json();
             // console.log(json_weather);
-            if(json_weather.cod==="404"){
+            if (json_weather.cod === "404") {
                 setCity(null);
-            }else{
+            } else {
                 setCity(json_weather);
             }
-            
+
+            // for the 5 days forcast
+            fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${search}&appid=a593e2c9d6050a4322c0f4b50c0f5f02&units=metric`).then(jsonData => jsonData.json()).then(data => setdayForecast(data));
         }
         fetch_api();
     }, [search])
     //    console.log(city)
 
     const check_city = (event) => {
-        if(event.target.value===""){
-            setSearch(" ")
-        }else{
+        if (event.target.value === "") {
+            setSearch(" ");
+        } else {
             setSearch((event.target.value).charAt(0).toUpperCase() + (event.target.value).slice(1));
         }
         // console.log(typeof(event.target.value))
@@ -100,20 +121,28 @@ export default function Weather() {
     return (
         <div className='main_body'>
             <video src={bgVdo} className='bg_vdo' autoPlay loop muted></video>
+            <h2>SpinoTech WEATHER APP</h2>
             <div className="container">
-                <h2>SpinoTech WEATHER APP</h2>
 
                 <div className="input">
-                    <input type="search" className='search' placeholder='Enter The Location' onChange={check_city}/>
-                    <button className='btn' onClick={check_location}><BiCurrentLocation size={20}/> </button>
-                    <AiOutlineArrowLeft size={20}/>
+                    <input type="search" className='search' placeholder='Enter The Location' onChange={check_city} />
+                    <button className='btn' onClick={check_location}><BiCurrentLocation size={20} /> </button>
+                    <AiOutlineArrowLeft size={20} />
                     <h2>Locate You</h2>
                 </div>
-                {!city? (<p style={{ fontSize: "2rem" }}>No Data Found</p>) : (
+                {!city ? (<p style={{ fontSize: "2rem" }}>No Data Found</p>) : (
                     <div className="info">
-                        <div className="location"> <i><FaSearchLocation size={30} /></i><h1>{city.name}</h1></div>
+                        <div className="location"><h1>{city.name}</h1> <img src={`https://openweathermap.org/img/wn/${city.weather[0].icon}.png`} alt="" /> {city.weather[0].main} </div>
 
-                        {!city ? (<h1>No Data Found</h1>) : (<h3 className='temperature'>{(city.main.temp ).toFixed(2)} ℃  /  {(((city.main.temp) * 1.8) + 32).toFixed(2)} °F</h3>)}
+                        {!city ? (<h1>No Data Found</h1>) : (<h3 className='temperature'>{(city.main.temp).toFixed(2)} ℃  /  {(((city.main.temp) * 1.8) + 32).toFixed(2)} °F</h3>)}
+
+                        <div className="wind">
+                            <h1>Lat : {city.coord.lat}</h1> <h1>Lon : {city.coord.lon}</h1>
+                        </div>
+
+                        <div className="wind">
+                            <h1>Time :</h1><h1 id='timer'> </h1>
+                        </div>
 
                         <div className='wind'><h1>Wind Speed : </h1>   <h1>{city.wind.speed} km/h</h1> <div style={{
                             transform: `rotate(${city
@@ -121,7 +150,7 @@ export default function Weather() {
                         }}><BsFillArrowUpCircleFill size={30} /></div></div>
 
                         <div className="about-info">
-                            <div className="wether-info">{!city? (<h3>No Data</h3>) : (<> <img src={low_temp} alt="" /> <h3>{(city.main.temp_min).toFixed(2)} ℃</h3> <h3>Minimum Temperture</h3> </>)}</div>
+                            <div className="wether-info">{!city ? (<h3>No Data</h3>) : (<> <img src={low_temp} alt="" /> <h3>{(city.main.temp_min).toFixed(2)} ℃</h3> <h3>Minimum Temperture</h3> </>)}</div>
                             <div className="wether-info">{!city ? (<h3>No Data</h3>) : (<> <img src={high_temp} alt="" /> <h3>{(city.main.temp_max).toFixed(2)} ℃</h3> <h3>Maximum Temperature</h3> </>)}</div>
                             <div className="wether-info">{!city ? (<h3>No Data</h3>) : (<> <img src={pressur} alt="" /> <h3>{!(city.main.pressure) ? "No Data" : (city.main.pressure / 1013).toFixed(3)} ATM</h3> <h3>Pressur</h3> </>)}</div>
 
@@ -129,6 +158,10 @@ export default function Weather() {
 
                             <div className="wether-info">{!city ? (<h3>No Data</h3>) : (<> <img src={sea_level} alt="" /> <h3>{!(city.main.sea_level) ? "No Data" : (city.main.sea_level)}</h3> <h3>Sea Level</h3> </>)}</div>
                             <div className="wether-info">{!city ? (<h3>No Data</h3>) : (<> <img src={ground_lvl} alt="" /> <h3>{!(city.main.grnd_level) ? "No Data" : (city.main.grnd_level)}</h3> <h3>Ground Level</h3> </>)}</div>
+                        </div>
+                        <h1 className='heading'>5 days forecast</h1>
+                        <div className="card-info">
+                            {dayforecast.list ? dayforecast.list.map(e => <Card data={e} key={e.dt} />) : ""}
                         </div>
                     </div>
                 )}
