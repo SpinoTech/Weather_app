@@ -14,7 +14,8 @@ import ground_lvl from "../doc/grnd_level.png"
 import { BsFillArrowUpCircleFill } from "react-icons/bs";
 import { BiCurrentLocation } from "react-icons/bi";
 import { AiOutlineArrowLeft } from "react-icons/ai";
-import Card from './Card';
+// import Card from './Card';
+import NewCard from './NewCard';
 
 
 
@@ -37,9 +38,39 @@ export default function Weather() {
     const [search, setSearch] = useState(" ");
     const [dayforecast, setdayForecast] = useState({});
 
+    // setting the daywise 5day forcast convert
+    const days = ["Monday ", "Tuesday ", "Wednesday ", "Thursday ", "Friday ", "Saturday ", "Sunday "];
+    const calculateDayWiseForcast = (e) => {
+        let dayWiseForcast = new Map();
+        for (let forcast of e) {
+            let [date] = forcast.dt_txt.split(" ");
+            let dayOfTheWeak = days[new Date(date).getDay()];
+            //   console.log(dayOfTheWeak)
+            if (dayWiseForcast.has(dayOfTheWeak)) {
+                let prevForcast = dayWiseForcast.get(dayOfTheWeak);
+                prevForcast.push(forcast);
+                dayWiseForcast.set(dayOfTheWeak, prevForcast);
+            }
+            else {
+                dayWiseForcast.set(dayOfTheWeak, [forcast]);
+            }
+        }
+        return dayWiseForcast;
+    }
+    let arrayData=null;
+    if (city && dayforecast && dayforecast.list) {
+        let mappedData = calculateDayWiseForcast(dayforecast.list);
+        // console.log(mappedData);
+        // converting map to array
+        arrayData=Array.from(mappedData,([key,value])=>({key, value}));
+    }
+
+
+
+
     const convertDate = (e) => {
         let date = new Date(e);
-        let day = `${date.toString()[0]}${date.toString()[1]}${date.toString()[2]}day`;
+        let day = days[date.getDay()-1];
         let time = date.toTimeString();
         let hr;
         if (parseInt(`${time[0]}${time[1]}`) > 12) hr = (parseInt(`${time[0]}${time[1]}`) - 12).toString();
@@ -48,7 +79,10 @@ export default function Weather() {
     }
     setInterval(() => {
         let time = convertDate(Date.now());
-        if (time && city) { document.querySelector("#timer").textContent = time; }
+        if (time && city) {
+            let timer = document.querySelector("#timer");
+            if (timer) timer.textContent = time;
+        }
     }, 1000);
 
     // location setting
@@ -79,9 +113,9 @@ export default function Weather() {
                 setCity(json_weather);
             }
 
-            // for the time wise forcast in days
+            // for the 5 days forcast
             fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${search}&appid=a593e2c9d6050a4322c0f4b50c0f5f02&units=metric`).then(jsonData => jsonData.json()).then(data => setdayForecast(data));
-            
+
             // settign the search value to the pointed location value
             document.querySelector(".search").value = search;
 
@@ -161,7 +195,10 @@ export default function Weather() {
                         </div>
                         <h1 className='heading'>5 days forecast</h1>
                         <div className="card-info">
-                            {dayforecast.list ? dayforecast.list.map(e => <Card data={e} key={e.dt} />) : ""}
+                            {/* {dayforecast.list ? dayforecast.list.map(e => <Card data={e} key={e.dt} />) : ""} */}
+                            {arrayData&& arrayData.map(e=>{
+                               return <NewCard data={e} key={e.key}/>
+                            })}
                         </div>
                     </div>
                 )}
